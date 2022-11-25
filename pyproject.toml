@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "nonebot-plugin-gscode"
+version = "0.1.0"
+description = "Genshin live codes plugin for NoneBot2"
+authors = ["monsterxcn <monsterxcn@gmail.com>"]
+documentation = "https://github.com/monsterxcn/nonebot-plugin-gscode#readme"
+license = "MIT"
+homepage = "https://github.com/monsterxcn/nonebot-plugin-gscode"
+readme = "README.md"
+keywords = ["nonebot", "nonebot2", "genshin", "live", "code", "redeem"]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+nonebot2 = ">=2.0.0a16"
+nonebot-adapter-onebot = ">=2.0.0b1"
+httpx = ">=0.20.0, <1.0.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
