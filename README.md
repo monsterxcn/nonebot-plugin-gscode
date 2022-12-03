@@ -30,10 +30,10 @@
 
 ```bash
 # 从 nb_cli 安装
-python3 -m nb_cli plugin install nonebot-plugin-gscode
+python -m nb_cli plugin install nonebot-plugin-gscode
 
 # 或从 PyPI 安装
-python3 -m pip install nonebot-plugin-gscode
+python -m pip install nonebot-plugin-gscode
 ```
 
 

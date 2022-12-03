@@ -47,35 +47,37 @@ async def getCodes() -> List[MessageSegment]:
     if not actId:
         return [
             MessageSegment.node_custom(
-                user_id=2854196310,
+                user_id=2854196320,
                 nickname="原神前瞻直播",
                 content=Message(MessageSegment.text("没有找到 actId！")),
             )
         ]
 
     indexRes = await getData("index", {"actId": actId})
-    mi18n = indexRes.get("data", {}).get("mi18n", "")
-    if not mi18n:
+    if not indexRes.get("data") or not indexRes["data"].get("mi18n", ""):
         return [
             MessageSegment.node_custom(
-                user_id=2854196310,
+                user_id=2854196320,
                 nickname="原神前瞻直播",
-                content=Message(MessageSegment.text("没有找到 mi18n！")),
+                content=Message(
+                    MessageSegment.text(indexRes.get("message") or "没有找到 mi18n！")
+                ),
             )
         ]
+    mi18n = indexRes["data"].get("mi18n", "")
 
     mi18nRes = await getData("mi18n", {"mi18n": mi18n})
     codeRes = await getData("code", {"actId": actId})
     nickname = mi18nRes.get("act-title", "").replace("特别节目", "") or "原神前瞻直播"
-    if indexRes.get("data", {}).get("remain", 0) or not len(codeRes):
+    if indexRes["data"].get("remain", 0) or not len(codeRes):
         return [
             MessageSegment.node_custom(
-                user_id=2854196310,
+                user_id=2854196320,
                 nickname=nickname,
                 content=Message(MessageSegment.image(mi18nRes["pc-kv"])),
             ),
             MessageSegment.node_custom(
-                user_id=2854196310,
+                user_id=2854196320,
                 nickname=nickname,
                 content=Message(
                     MessageSegment.text(
@@ -97,7 +99,7 @@ async def getCodes() -> List[MessageSegment]:
     )
     codes = [
         MessageSegment.node_custom(
-            user_id=2854196310,
+            user_id=2854196320,
             nickname=nickname,
             content=Message(
                 MessageSegment.text(
@@ -113,7 +115,7 @@ async def getCodes() -> List[MessageSegment]:
         )
         codes.append(
             MessageSegment.node_custom(
-                user_id=2854196310,
+                user_id=2854196320,
                 nickname="+".join(g for g in gifts if not g[-1].isdigit()) or nickname,
                 content=Message(MessageSegment.text(codeInfo["code"])),
             )
