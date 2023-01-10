@@ -10,7 +10,7 @@ codeMatcher = on_command("gscode", aliases={"兑换码"}, priority=5)
 
 @codeMatcher.handle()
 async def _(bot: Bot, event: MessageEvent, state: T_State):
-    if not str(state["_prefix"]["command_arg"]):
+    if str(state["_prefix"]["command_arg"]):
         await codeMatcher.finish()
     codes = await getCodes()
     if isinstance(event, GroupMessageEvent):

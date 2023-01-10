@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-gscode"
-version = "0.1.4"
+version = "0.1.5"
 description = "Genshin live codes plugin for NoneBot2"
 authors = ["monsterxcn <monsterxcn@gmail.com>"]
 documentation = "https://github.com/monsterxcn/nonebot-plugin-gscode#readme"
