@@ -5,12 +5,12 @@ from nonebot.typing import T_State
 
 from .data_source import getCodes
 
-codeMatcher = on_command("gscode", aliases={"兑换码"}, priority=5, block=True)
+codeMatcher = on_command("gscode", aliases={"兑换码"}, priority=5)
 
 
 @codeMatcher.handle()
 async def _(bot: Bot, event: MessageEvent, state: T_State):
-    if event.get_plaintext() not in ["gscode", "兑换码"]:
+    if not str(state["_prefix"]["command_arg"]):
         await codeMatcher.finish()
     codes = await getCodes()
     if isinstance(event, GroupMessageEvent):

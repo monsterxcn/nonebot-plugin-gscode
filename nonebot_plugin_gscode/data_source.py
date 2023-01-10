@@ -1,3 +1,5 @@
+# https://github.com/Le-niao/Yunzai-Bot/blob/c158cdd38c8ab5bbe6e5b984d21ba84b454de7a9/plugins/genshin/apps/exchange.js
+
 import json
 from re import findall
 from time import time, strftime, localtime
@@ -107,8 +109,8 @@ async def getCodes() -> List[MessageSegment]:
         ""
         if len(codeRes) == 3
         else (
-            "，下一个兑换码发放时间为 "
-            + strftime("%H:%M:%S", localtime(int(mi18nRes[f"time{len(codeRes) + 1}"])))
+            "，下一个兑换码发放时间预计为 "  # 实际该时间并不准确
+            + strftime("%H:%M", localtime(int(mi18nRes[f"time{len(codeRes) + 1}"])))
         )
     )
     codes = [
