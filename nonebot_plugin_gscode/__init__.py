@@ -1,7 +1,7 @@
-from nonebot.adapters.onebot.v11 import Bot
-from nonebot.adapters.onebot.v11.event import GroupMessageEvent, MessageEvent
-from nonebot.plugin import PluginMetadata, on_command
 from nonebot.typing import T_State
+from nonebot.adapters.onebot.v11 import Bot
+from nonebot.plugin import PluginMetadata, on_command
+from nonebot.adapters.onebot.v11.event import MessageEvent, GroupMessageEvent
 
 from .data_source import getCodes
 
@@ -23,6 +23,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         await codeMatcher.finish()
     codes = await getCodes()
     if isinstance(event, GroupMessageEvent):
-        await bot.send_group_forward_msg(group_id=event.group_id, messages=codes)  # type: ignore
+        await bot.send_group_forward_msg(group_id=event.group_id, messages=codes)
     else:
-        await bot.send_private_forward_msg(user_id=event.user_id, messages=codes)  # type: ignore
+        await bot.send_private_forward_msg(user_id=event.user_id, messages=codes)

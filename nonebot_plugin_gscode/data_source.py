@@ -1,23 +1,26 @@
-# https://github.com/Le-niao/Yunzai-Bot/blob/c158cdd38c8ab5bbe6e5b984d21ba84b454de7a9/plugins/genshin/apps/exchange.js
+"""
+移植自云崽本体，其中 act_id 获取修改为采用官方账号原神米游姬的帖子数据，不依赖个人整理的合集
+https://gitee.com/Le-niao/Yunzai-Bot/blob/main/plugins/genshin/apps/exchange.js
+"""
 
 import json
 from re import findall
-from time import time, strftime, localtime
 from typing import Dict, List
+from time import time, strftime, localtime
 
 from httpx import AsyncClient
-from nonebot.adapters.onebot.v11 import Message, MessageSegment
 from nonebot.log import logger
+from nonebot.adapters.onebot.v11 import Message, MessageSegment
 
 
 async def getData(type, data: Dict = {}) -> Dict:
     """米哈游接口请求"""
 
     url = {
-        "index": f"https://api-takumi.mihoyo.com/event/bbslive/index?act_id={data.get('actId', '')}",
-        "mi18n": f"https://webstatic.mihoyo.com/admin/mi18n/bbs_cn/{data.get('mi18n', '')}/{data.get('mi18n', '')}-zh-cn.json",
-        "code": f"https://webstatic.mihoyo.com/bbslive/code/{data.get('actId', '')}.json?version=1&time={int(time())}",
-        "actId": "https://bbs-api.mihoyo.com/painter/api/user_instant/list?offset=0&size=20&uid=75276550",  # 原神米游姬
+        "index": f"https://api-takumi.mihoyo.com/event/bbslive/index?act_id={data.get('actId', '')}",  # noqa: E501
+        "mi18n": f"https://webstatic.mihoyo.com/admin/mi18n/bbs_cn/{data.get('mi18n', '')}/{data.get('mi18n', '')}-zh-cn.json",  # noqa: E501
+        "code": f"https://webstatic.mihoyo.com/bbslive/code/{data.get('actId', '')}.json?version=1&time={int(time())}",  # noqa: E501
+        "actId": "https://bbs-api.mihoyo.com/painter/api/user_instant/list?offset=0&size=20&uid=75276550",  # 原神米游姬  # noqa: E501
     }
     async with AsyncClient() as client:
         try:
@@ -97,9 +100,9 @@ async def getCodes() -> List[MessageSegment]:
                 nickname=nickname,
                 content=Message(
                     MessageSegment.text(
-                        f"预计第一个兑换码发放时间为 "
-                        f"{strftime('%m 月 %d 日 %H:%M', localtime(int(mi18nRes['time1'])))}"
-                        "\n\n* 官方接口数据有 2 分钟左右延迟，请耐心等待下~"
+                        "预计第一个兑换码发放时间为 "
+                        + strftime("%m 月 %d 日 %H:%M", localtime(int(mi18nRes["time1"])))
+                        + "\n\n* 官方接口数据有 2 分钟左右延迟，请耐心等待下~"
                     )
                 ),
             ),
