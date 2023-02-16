@@ -1,9 +1,18 @@
 from nonebot.adapters.onebot.v11 import Bot
 from nonebot.adapters.onebot.v11.event import GroupMessageEvent, MessageEvent
-from nonebot.plugin import on_command
+from nonebot.plugin import PluginMetadata, on_command
 from nonebot.typing import T_State
 
 from .data_source import getCodes
+
+__plugin_meta__ = PluginMetadata(
+    name="GsCode",
+    description="查询原神前瞻直播兑换码",
+    usage="""查询原神前瞻直播兑换码
+注意：经测试，兑换码接口返回与前瞻直播有 2 分钟左右延迟，应为正常现象，请耐心等待。
+/gscode
+/兑换码""",
+)
 
 codeMatcher = on_command("gscode", aliases={"兑换码"}, priority=5)
 
