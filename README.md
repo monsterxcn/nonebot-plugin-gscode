@@ -5,16 +5,10 @@
 
 
 <p align="center">
-  <a href="https://github.com/monsterxcn/nonebot-plugin-gscode/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/monsterxcn/nonebot-plugin-gscode/publish.yml?branch=main&style=flat-square" alt="actions">
-  </a>
-  <a href="https://raw.githubusercontent.com/monsterxcn/nonebot-plugin-gscode/master/LICENSE">
-    <img src="https://img.shields.io/github/license/monsterxcn/nonebot-plugin-gscode?style=flat-square" alt="license">
-  </a>
-  <a href="https://pypi.python.org/pypi/nonebot-plugin-gscode">
-    <img src="https://img.shields.io/pypi/v/nonebot-plugin-gscode?style=flat-square" alt="pypi">
-  </a>
-  <img src="https://img.shields.io/badge/python-3.8+-blue?style=flat-square" alt="python"><br />
+  <a href="https://raw.githubusercontent.com/monsterxcn/nonebot-plugin-gscode/master/LICENSE"><img src="https://img.shields.io/github/license/monsterxcn/nonebot-plugin-gscode?style=flat-square" alt="license" /></a>
+  <a href="https://pypi.python.org/pypi/nonebot-plugin-gscode"><img src="https://img.shields.io/pypi/v/nonebot-plugin-gscode?style=flat-square" alt="pypi" /></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.8+-blue?style=flat-square" alt="python" /></a>
+  <a href="https://jq.qq.com/?_wv=1027&k=GF2vqPgf"><img src="https://img.shields.io/badge/QQ%E7%BE%A4-662597191-orange?style=flat-square" alt="QQ Chat Group" /></a><br />
 </p></br>
 
 
@@ -30,10 +24,7 @@
 
 ```bash
 # 从 nb_cli 安装
-python -m nb_cli plugin install nonebot-plugin-gscode
-
-# 或从 PyPI 安装
-python -m pip install nonebot-plugin-gscode
+nb plugin install nonebot-plugin-gscode
 ```
 
 
