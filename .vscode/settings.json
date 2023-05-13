@@ -4,13 +4,14 @@
   "python.analysis.diagnosticSeverityOverrides": {
     "reportPrivateImportUsage": "warning"
   },
-  "python.formatting.provider": "black",
+  "python.formatting.provider": "none",
   "python.languageServer": "Pylance",
   "[python]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": true,
       "source.fixAll": true
-    }
+    },
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "editor.formatOnSave": true,
   "files.watcherExclude": {

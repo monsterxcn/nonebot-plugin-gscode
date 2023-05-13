@@ -50,7 +50,7 @@ async def getActId() -> str:
         for segment in shit:
             link = segment.get("attributes", {}).get("link", "")
             if "观看直播" in segment.get("insert", "") and link:
-                matched = findall(r"act_id=(\d{8}ys\d{4})", link)
+                matched = findall(r"act_id=(.*?)\&", link)
                 if matched:
                     actId = matched[0]
         if actId:
