@@ -3,7 +3,7 @@ from nonebot.adapters.onebot.v11 import Bot
 from nonebot.plugin import PluginMetadata, on_command
 from nonebot.adapters.onebot.v11.event import MessageEvent, GroupMessageEvent
 
-from .data_source import getCodes
+from .data_source import getMsg
 
 __plugin_meta__ = PluginMetadata(
     name="GsCode",
@@ -21,7 +21,7 @@ codeMatcher = on_command("gscode", aliases={"兑换码"}, priority=5)
 async def _(bot: Bot, event: MessageEvent, state: T_State):
     if str(state["_prefix"]["command_arg"]):
         await codeMatcher.finish()
-    codes = await getCodes()
+    codes = await getMsg()
     if isinstance(event, GroupMessageEvent):
         await bot.send_group_forward_msg(group_id=event.group_id, messages=codes)
     else:
