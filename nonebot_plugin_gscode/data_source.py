@@ -1,22 +1,22 @@
 import json
+from datetime import datetime, timedelta, timezone
+from re import findall, sub
 from time import time
-from re import findall
 from typing import Dict, List, Union
-from datetime import datetime, timezone, timedelta
 
 from httpx import AsyncClient
-
-from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import Message, MessageSegment
+from nonebot.log import logger
 
 TZ = timezone(timedelta(hours=8))
 
 
-async def getData(type, data: Dict = {}) -> Dict:
+async def getData(type, mhy_type: str = "", data: Dict = {}) -> Dict:
     """米哈游接口请求"""
 
+    uid = 288909600 if mhy_type == "sr" else 75276550
     url = {
-        "actId": "https://bbs-api.mihoyo.com/painter/api/user_instant/list?offset=0&size=20&uid=75276550",
+        "actId": f"https://bbs-api.mihoyo.com/painter/api/user_instant/list?offset=0&size=20&uid={uid}",
         "index": "https://api-takumi.mihoyo.com/event/miyolive/index",
         "code": "https://api-takumi-static.mihoyo.com/event/miyolive/refreshCode",
     }
@@ -43,15 +43,15 @@ async def getData(type, data: Dict = {}) -> Dict:
             return {"error": f"[{e.__class__.__name__}] {type} 接口请求错误"}
 
 
-async def getActId() -> str:
+async def getActId(mhy_type) -> str:
     """获取 ``act_id``"""
 
-    ret = await getData("actId")
+    ret = await getData(type="actId", mhy_type=mhy_type)
     if ret.get("error") or ret.get("retcode") != 0:
         return ""
 
     actId = ""
-    keywords = ["来看《原神》", "版本前瞻特别节目"]
+    keywords = ["版本前瞻特别节目"]
     for p in ret["data"]["list"]:
         post = p.get("post", {}).get("post", {})
         if not post:
@@ -61,7 +61,7 @@ async def getActId() -> str:
         shit = json.loads(post["structured_content"])
         for segment in shit:
             link = segment.get("attributes", {}).get("link", "")
-            if "观看直播" in segment.get("insert", "") and link:
+            if "直播" in segment.get("insert", "") and link:
                 matched = findall(r"act_id=(.*?)\&", link)
                 if matched:
                     actId = matched[0]
@@ -74,7 +74,7 @@ async def getActId() -> str:
 async def getLiveData(actId: str) -> Dict:
     """获取直播数据，尤其是 ``code_ver``"""
 
-    ret = await getData("index", {"actId": actId})
+    ret = await getData(type="index", data={"actId": actId})
     if ret.get("error") or ret.get("retcode") != 0:
         return {"error": ret.get("error") or "前瞻直播数据异常"}
 
@@ -90,9 +90,9 @@ async def getLiveData(actId: str) -> Dict:
         liveData["review"] = liveTemplate["reviewUrl"]["args"]["post_id"]
     else:
         now = datetime.fromtimestamp(time(), TZ)
-        start = datetime.strptime(liveDataRaw["start"], "%Y-%m-%d %H:%M:%S").replace(
-            tzinfo=TZ
-        )
+        start = datetime.strptime(
+            liveDataRaw["start"], "%Y-%m-%d %H:%M:%S"
+        ).replace(tzinfo=TZ)
         if now < start:
             liveData["start"] = liveDataRaw["start"]
 
@@ -102,19 +102,17 @@ async def getLiveData(actId: str) -> Dict:
 async def getCodes(version: str, actId: str) -> Union[Dict, List[Dict]]:
     """获取兑换码"""
 
-    ret = await getData("code", {"version": version, "actId": actId})
+    ret = await getData(type="code", data={"version": version, "actId": actId})
     if ret.get("error") or ret.get("retcode") != 0:
         return {"error": ret.get("error") or "兑换码数据异常"}
 
     codesData = []
     for codeInfo in ret["data"]["code_list"]:
-        gifts = findall(
-            r">\s*([\u4e00-\u9fa5]+|\*[0-9]+)\s*\*<",
-            codeInfo["title"].replace("&nbsp;", " "),
-        )
         codesData.append(
             {
-                "items": "+".join(g for g in gifts if not g[-1].isdigit()),
+                "items": sub(
+                    "<.*?>", "", codeInfo["title"].replace("&nbsp;", " ")
+                ),
                 "code": codeInfo["code"],
             }
         )
@@ -122,15 +120,16 @@ async def getCodes(version: str, actId: str) -> Union[Dict, List[Dict]]:
     return codesData
 
 
-async def getMsg() -> List[MessageSegment]:
+async def getMsg(mhy_type) -> List[MessageSegment]:
     """生成最新前瞻直播兑换码合并转发消息"""
 
-    actId = await getActId()
+    actId = await getActId(mhy_type=mhy_type)
+    nickname = "原神前瞻直播" if mhy_type == "ys" else "崩坏铁道前瞻直播"
     if not actId:
         return [
             MessageSegment.node_custom(
                 user_id=2854196320,
-                nickname="原神前瞻直播",
+                nickname=nickname,
                 content=Message(MessageSegment.text("暂无前瞻直播资讯！")),
             )
         ]
@@ -140,7 +139,7 @@ async def getMsg() -> List[MessageSegment]:
         return [
             MessageSegment.node_custom(
                 user_id=2854196320,
-                nickname="原神前瞻直播",
+                nickname=nickname,
                 content=Message(MessageSegment.text(liveData["error"])),
             )
         ]
