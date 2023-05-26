@@ -1,12 +1,12 @@
 import json
-from datetime import datetime, timedelta, timezone
-from re import findall, sub
 from time import time
+from re import sub, findall
 from typing import Dict, List, Union
+from datetime import datetime, timezone, timedelta
 
 from httpx import AsyncClient
-from nonebot.adapters.onebot.v11 import Message, MessageSegment
 from nonebot.log import logger
+from nonebot.adapters.onebot.v11 import Message, MessageSegment
 
 TZ = timezone(timedelta(hours=8))
 
@@ -90,9 +90,9 @@ async def getLiveData(actId: str) -> Dict:
         liveData["review"] = liveTemplate["reviewUrl"]["args"]["post_id"]
     else:
         now = datetime.fromtimestamp(time(), TZ)
-        start = datetime.strptime(
-            liveDataRaw["start"], "%Y-%m-%d %H:%M:%S"
-        ).replace(tzinfo=TZ)
+        start = datetime.strptime(liveDataRaw["start"], "%Y-%m-%d %H:%M:%S").replace(
+            tzinfo=TZ
+        )
         if now < start:
             liveData["start"] = liveDataRaw["start"]
 
@@ -110,9 +110,7 @@ async def getCodes(version: str, actId: str) -> Union[Dict, List[Dict]]:
     for codeInfo in ret["data"]["code_list"]:
         codesData.append(
             {
-                "items": sub(
-                    "<.*?>", "", codeInfo["title"].replace("&nbsp;", " ")
-                ),
+                "items": sub("<.*?>", "", codeInfo["title"].replace("&nbsp;", " ")),
                 "code": codeInfo["code"],
             }
         )
