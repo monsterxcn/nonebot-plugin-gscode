@@ -16,7 +16,8 @@ async def getData(type, mhy_type: str = "", data: Dict = {}) -> Dict:
 
     uid = 288909600 if mhy_type == "sr" else 75276550
     url = {
-        "actId": f"https://bbs-api.mihoyo.com/painter/api/user_instant/list?offset=0&size=20&uid={uid}",
+        "actId": f"https://bbs-api.mihoyo.com/painter/api"
+        f"/user_instant/list?offset=0&size=20&uid={uid}",
         "index": "https://api-takumi.mihoyo.com/event/miyolive/index",
         "code": "https://api-takumi-static.mihoyo.com/event/miyolive/refreshCode",
     }
