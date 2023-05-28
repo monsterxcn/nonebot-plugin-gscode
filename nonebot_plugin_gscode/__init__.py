@@ -1,3 +1,4 @@
+from nonebot.internal.matcher import Matcher
 from nonebot.typing import T_State
 from nonebot.adapters.onebot.v11 import Bot
 from nonebot.plugin import PluginMetadata, on_command
@@ -14,21 +15,27 @@ __plugin_meta__ = PluginMetadata(
 /srcode""",
 )
 
-code_matcher = on_command(
-    "gscode", aliases={"原神兑换码", "srcode", "铁道兑换码", "星穹铁道兑换码"}, priority=5
+gs_code_matcher = on_command("gscode", aliases={"原神兑换码"}, priority=5)
+sr_code_matcher = on_command(
+    "srcode", aliases={"铁道兑换码", "星穹铁道兑换码"}, priority=5
 )
 
 
-@code_matcher.handle()
-async def _(bot: Bot, event: MessageEvent, state: T_State):
+@gs_code_matcher.handle()
+@sr_code_matcher.handle()
+async def _(bot: Bot, event: MessageEvent, state: T_State, matcher: Matcher):
     if str(state["_prefix"]["command_arg"]):
-        await code_matcher.finish()
-    if event.get_message()[0].type == "text":
-        if any(word in event.get_message()[0].data["text"] for word in ["sr", "铁道"]):
-            codes = await get_msg("sr")
-        else:
-            codes = await get_msg("gs")
+        await matcher.finish()
+    codes = (
+        await get_msg("gs")
+        if isinstance(matcher, gs_code_matcher)
+        else await get_msg("sr")
+    )
     if isinstance(event, GroupMessageEvent):
-        await bot.send_group_forward_msg(group_id=event.group_id, messages=codes)
+        await bot.send_group_forward_msg(
+            group_id=event.group_id, messages=codes
+        )
     else:
-        await bot.send_private_forward_msg(user_id=event.user_id, messages=codes)
+        await bot.send_private_forward_msg(
+            user_id=event.user_id, messages=codes
+        )
