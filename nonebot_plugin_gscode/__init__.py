@@ -11,7 +11,7 @@ __plugin_meta__ = PluginMetadata(
     usage="""查询原神/星穹铁道前瞻直播兑换码
 注意：经测试，兑换码接口返回与前瞻直播有 2 分钟左右延迟，应为正常现象，请耐心等待。
 /gscode
-/兑换码""",
+/srcode""",
 )
 
 codeMatcher = on_command(
