@@ -3,7 +3,7 @@ from nonebot.adapters.onebot.v11 import Bot
 from nonebot.plugin import PluginMetadata, on_command
 from nonebot.adapters.onebot.v11.event import MessageEvent, GroupMessageEvent
 
-from .data_source import getMsg
+from .data_source import get_msg
 
 __plugin_meta__ = PluginMetadata(
     name="GsCode",
@@ -14,20 +14,20 @@ __plugin_meta__ = PluginMetadata(
 /srcode""",
 )
 
-codeMatcher = on_command(
+code_matcher = on_command(
     "gscode", aliases={"原神兑换码", "srcode", "铁道兑换码", "星穹铁道兑换码"}, priority=5
 )
 
 
-@codeMatcher.handle()
+@code_matcher.handle()
 async def _(bot: Bot, event: MessageEvent, state: T_State):
     if str(state["_prefix"]["command_arg"]):
-        await codeMatcher.finish()
+        await code_matcher.finish()
     if event.get_message()[0].type == "text":
         if any(word in event.get_message()[0].data["text"] for word in ["sr", "铁道"]):
-            codes = await getMsg("sr")
+            codes = await get_msg("sr")
         else:
-            codes = await getMsg("ys")
+            codes = await get_msg("gs")
     if isinstance(event, GroupMessageEvent):
         await bot.send_group_forward_msg(group_id=event.group_id, messages=codes)
     else:
