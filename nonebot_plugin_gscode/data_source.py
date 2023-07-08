@@ -88,7 +88,7 @@ async def get_live_data(act_id: str) -> Dict:
         "room": live_template["liveConfig"][0]["desktop"],
     }
     if live_data_raw["is_end"]:
-        live_data["review"] = live_template["reviewUrl"]["args"]["post_id"]
+        live_data["review"] = live_template["reviewUrl"]["args"].get("post_id")
     else:
         now = datetime.fromtimestamp(time(), TZ)
         start = datetime.strptime(live_data_raw["start"], "%Y-%m-%d %H:%M:%S").replace(
