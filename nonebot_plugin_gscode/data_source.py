@@ -14,7 +14,7 @@ TZ = timezone(timedelta(hours=8))
 async def get_data(type, mhy_type: str = "", data: Dict = {}) -> Dict:
     """米哈游接口请求"""
 
-    uid = 288909600 if mhy_type == "sr" else 75276550
+    uid = 80823548 if mhy_type == "sr" else 75276550
     url = {
         "act_id": f"https://bbs-api.mihoyo.com/painter/api"
         f"/user_instant/list?offset=0&size=20&uid={uid}",
@@ -52,7 +52,7 @@ async def get_act_id(mhy_type) -> str:
         return ""
 
     act_id = ""
-    keywords = ["版本前瞻特别节目"]
+    keywords = ["版本前瞻讨论活动"] if mhy_type == "sr" else ["版本前瞻特别节目"]
     for p in ret["data"]["list"]:
         post = p.get("post", {}).get("post", {})
         if not post:
@@ -62,7 +62,7 @@ async def get_act_id(mhy_type) -> str:
         shit = json.loads(post["structured_content"])
         for segment in shit:
             link = segment.get("attributes", {}).get("link", "")
-            if "直播" in segment.get("insert", "") and link:
+            if "观看" in segment.get("insert", "") and link:
                 matched = findall(r"act_id=(.*?)\&", link)
                 if matched:
                     act_id = matched[0]
